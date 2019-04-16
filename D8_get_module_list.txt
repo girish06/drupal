@@ -1,0 +1,28 @@
+$details = [];
+$heading = ['Module/ThemeName', 'Project-Type', 'Current-Version', 'Recommended-Version', 'Download-link'];
+$file = fopen('php://output', 'w');
+fputcsv($file, $heading);
+$available = update_get_available(TRUE);
+\Drupal::moduleHandler()->loadInclude('update', 'compare.inc');
+$modules = update_calculate_project_data($available);
+foreach ($modules as $key=>$module) {
+ if ($module['existing_version'] != $module['recommended']) {
+foreach ($module['releases'] as $release) {
+  $release_link = $release['release_link'];
+}
+  $details = [
+    'name' =>  $key,
+     'project_type' => $module['project_type'],
+   'existing_version' => $module['existing_version'],
+   'recommended' => $module['recommended'],
+   'release_link' => $release_link,
+ ];
+fputcsv($file, $details);
+}
+}
+
+header('Content-type: text/csv');
+header('Content-Disposition: attachment; filename="ModuleStatus.csv"');
+header('Pragma: no-cache');
+header('Expires: 0');
+exit();
